@@ -9,11 +9,11 @@ start_service() {
     config_load 'ibm-watson-cloud'
     config_get enabled main_sct 'enable' '0'
     config_get interval main_sct 'interval' '2'
-
-    config_get org device_sct 'org' ''
-    config_get type device_sct 'type' ''
-    config_get device device_sct 'device' ''
-    config_get auth device_sct 'auth' ''
+    
+    config_get org main_sct 'org' ''
+    config_get type main_sct 'type' ''
+    config_get device main_sct 'device' ''
+    config_get auth main_sct 'auth' ''
 
     if [ "$enabled" -eq 1 ]; then
         procd_open_instance

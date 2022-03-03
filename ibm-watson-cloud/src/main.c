@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <argp.h>
 #include <signal.h>
+#include <unistd.h>
 #include <sys/file.h>
 #include <fcntl.h>
 
@@ -22,24 +23,23 @@ void handle_signal(int signo) {
 
 int file_lock(const char* file, int *fd) {
     if ((*fd = open(file, O_RDWR | O_CREAT)) == -1) {
-        fprintf(stderr, "Failed to open file\n");
+        fprintf(stderr, "Failed to open lock file\n");
         return 1;
     }
 
     if (flock(*fd, LOCK_EX | LOCK_NB) == -1) {
-        fprintf(stderr, "File is alrealy locked\n");
+        fprintf(stderr, "An instance of this program is already running. Exiting...\n");
         return 1;
     }
     return 0;
 }
 
-void file_unlock(int fd) {
+int file_unlock(int fd) {
     if (flock(fd, LOCK_UN) == -1) {
         fprintf(stderr, "Failed to unlock file\n");
         return 1;
     }
     close(fd);
-    fprintf(stdout, "Unlocked\n");
     return 0;
 }
 
